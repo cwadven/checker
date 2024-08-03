@@ -357,6 +357,12 @@ chmod +x ./docker_soft_deploy.sh
 # - Then add below line
 # gunicorn config.wsgi:application --bind 0.0.0.0:8001
 
+
+# Delete useless cache of docker
+docker rmi $(docker images -q) -f
+docker rm $(docker ps -aq) -f
+docker builder prune -a -f
+
 # 5.
 # Run deploy script (hard deploy)
 # Meaning, it will --build all docker containers and images
