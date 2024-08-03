@@ -61,4 +61,4 @@ volumes:
 networks:
   default:
     external:
-      name: common_network
+      name: checker_common_network

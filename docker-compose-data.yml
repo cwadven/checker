@@ -3,7 +3,7 @@
 version: '3.6'
 services:
   db:
-    container_name: database
+    container_name: checker_database
     image: postgres:14
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -19,9 +19,15 @@ services:
       options:
         max-file: "7"
         max-size: "5m"
+    command: >
+      sh -c "
+      until pg_isready -h localhost -U ${POSTGRES_USER}; do
+        sleep 1;
+      done;
+      psql -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB} -c 'CREATE EXTENSION IF NOT EXISTS pg_trgm';"
 
   pgadmin:
-    container_name: pgadmin
+    container_name: checker_pgadmin
     image: dpage/pgadmin4
     restart: unless-stopped
     ports:
@@ -36,7 +42,7 @@ services:
       - db
 
   redis:
-    container_name: cache
+    container_name: checker_cache
     image: redis:latest
     volumes:
       - redis_data:/data
@@ -51,4 +57,4 @@ volumes:
 networks:
   default:
     external:
-      name: common_network
+      name: checker_common_network

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Check Docker Network
-NETWORK_NAME="common_network"
+NETWORK_NAME="checker_common_network"
 
 # Search from Docker Network List
 network_exists=$(docker network ls | grep -w $NETWORK_NAME)
