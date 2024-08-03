@@ -60,8 +60,8 @@ fi
 BLUE_APP_COMPOSE_FILE=docker-compose-app-blue.yml
 GREEN_APP_COMPOSE_FILE=docker-compose-app-green.yml
 
-blue_app_services="web_blue cron_blue celery_blue"
-green_app_services="web_green cron_green celery_green"
+blue_app_services="checker_web_blue cron_blue celery_blue"
+green_app_services="checker_web_green cron_green celery_green"
 
 app_blue_services_up=true
 app_green_services_up=true

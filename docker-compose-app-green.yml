@@ -2,8 +2,8 @@
 
 version: '3.8'
 services:
-  web_green:
-    container_name: web_green
+  checker_web_green:
+    container_name: checker_web_green
     build:
       context: .
       dockerfile: Dockerfile-app
@@ -11,15 +11,13 @@ services:
       sh -c "pip install --no-cache-dir -r requirements.txt &&
              python manage.py migrate && 
              python manage.py collectstatic --noinput &&
-             newrelic-admin run-program gunicorn config.wsgi:application --bind 0.0.0.0:8001"
+             gunicorn config.wsgi:application --bind 0.0.0.0:8001
     volumes:
       - .:/app
     ports:
       - "8001:8000"
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings.production
-      - NEW_RELIC_APP_NAME=${NEW_RELIC_APP_NAME}
-      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
 
   cron_green:
     container_name: cron_green
@@ -30,7 +28,7 @@ services:
       - .:/app
       - cron_log:/tmp
     depends_on:
-      - web_green
+      - checker_web_green
     command: >
       sh -c "pip install --no-cache-dir -r requirements.txt &&
              dos2unix command.cron &&
@@ -52,7 +50,7 @@ services:
     volumes:
       - .:/app
     depends_on:
-      - web_green
+      - checker_web_green
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings.production
       - CELERY_BROKER_URL=redis://redis:6379/2
