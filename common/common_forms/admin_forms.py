@@ -7,11 +7,13 @@ from django import forms
 
 class PreSignedUrlAdminForm(forms.ModelForm):
     """
-    Admin Form for handling pre-signed URL for image upload
-    Need to define Meta class with 'mapping_image_fields' and 'upload_image_type'
+    Admin Form for handling pre-signed URL for image upload.
+    Need to Define ImageField 'target_field_by_image_field' of key.
 
-    mapping_image_fields key: The field name in the form for the image file upload.
-    mapping_image_fields value: The field name in the model for the image URL.
+    Need to define Meta class with 'target_field_by_image_field' and 'upload_image_type'
+
+    target_field_by_image_field key: The field name in the form for the image file upload.
+    target_field_by_image_field value: The field name in the model for the image URL.
     upload_image_type: The type of image upload to folder of S3. Default is 'common'.
 
     examples:
@@ -21,23 +23,36 @@ class PreSignedUrlAdminForm(forms.ModelForm):
         class Meta:
             model = XXXX
             fields = '__all__'
-            mapping_image_fields = {
+            target_field_by_image_field = {
                 'main_image_file': 'main_image_url'
             }
             upload_image_type = 'xxxx_main_image'
     """
+    def __init__(self, *args, **kwargs):
+        super(PreSignedUrlAdminForm, self).__init__(*args, **kwargs)
+        target_field_by_image_field = self._get_target_field_by_image_field()
+        if not target_field_by_image_field:
+            raise Exception(
+                'When using PreSignedUrlAdminForm need to define "Meta" class with "target_field_by_image_field."'
+            )
+        for key, target_field in target_field_by_image_field.items():
+            if not isinstance(self.fields.get(key), forms.ImageField):
+                raise TypeError(f'Need to define "{key}" by ImageField in form.')
+            if not hasattr(self.instance, target_field):
+                raise AttributeError(f'Are you sure "{target_field}" is defined in model?')
+
     def _get_meta(self):
         return getattr(self, 'Meta')
 
-    def _get_mapping_image_fields(self):
-        return getattr(self._get_meta(), 'mapping_image_fields', {})
+    def _get_target_field_by_image_field(self):
+        return getattr(self._get_meta(), 'target_field_by_image_field', {})
 
     def _get_upload_image_type(self):
         return getattr(self._get_meta(), 'upload_image_type', 'common')
 
     def save(self, commit=True):
         instance = super(PreSignedUrlAdminForm, self).save(commit=False)
-        for key, value in self._get_mapping_image_fields().items():
+        for key, value in self._get_target_field_by_image_field().items():
             if self.cleaned_data[key]:
                 response = generate_pre_signed_url_info(
                     self.cleaned_data[key].name,

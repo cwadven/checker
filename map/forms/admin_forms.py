@@ -9,7 +9,7 @@ class MapAdminForm(PreSignedUrlAdminForm):
     class Meta:
         model = Map
         fields = '__all__'
-        mapping_image_fields = {
+        target_field_by_image_field = {
             'main_image_file': 'main_image_url'
         }
         upload_image_type = 'map_main_image'
