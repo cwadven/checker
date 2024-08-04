@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from member.consts import (
+    AcquisitionPKType,
     MemberStatusExceptionTypeSelector,
 )
 from member.managers import MemberManager
@@ -102,3 +103,66 @@ class MemberExtraLink(models.Model):
 
     def __str__(self):
         return f'{self.member_id, self.title}'
+
+
+class MemberMapSubscription(models.Model):
+    member = models.ForeignKey(Member, models.DO_NOTHING)
+    map = models.ForeignKey('map.Map', models.DO_NOTHING)
+    is_deleted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = '회원 맵 구독'
+        verbose_name_plural = '회원 맵 구독'
+
+    def __str__(self):
+        return f'member: {self.member_id} / map_id: {self.map_id}'
+
+
+class MemberNodeAcquisition(models.Model):
+    member_map_subscription = models.ForeignKey(
+        MemberMapSubscription,
+        models.DO_NOTHING,
+    )
+    map = models.ForeignKey('map.Map', models.DO_NOTHING)
+    node = models.ForeignKey('network.Node', models.DO_NOTHING)
+    acquisition_pk = models.CharField(
+        max_length=256,
+        null=True,
+        blank=True,
+        db_index=True,
+    )
+    acquisition_pk_type = models.CharField(
+        max_length=256,
+        choices=AcquisitionPKType.choices(),
+    )
+    is_deleted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = '회원 Node 획득'
+        verbose_name_plural = '회원 Node 획득'
+
+    def __str__(self):
+        return f'member: {self.member_map_subscription.member_id} / node_id: {self.node_id}'
+
+
+class MemberArrowAcquisition(models.Model):
+    member_map_subscription = models.ForeignKey(
+        MemberMapSubscription,
+        models.DO_NOTHING,
+    )
+    map = models.ForeignKey('map.Map', models.DO_NOTHING)
+    arrow = models.ForeignKey('network.Arrow', models.DO_NOTHING)
+    is_deleted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = '회원 Arrow 획득'
+        verbose_name_plural = '회원 Arrow 획득'
+
+    def __str__(self):
+        return f'member: {self.member_map_subscription.member_id} / arrow_id: {self.arrow_id}'

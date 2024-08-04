@@ -95,6 +95,6 @@ PASSWORD_MIN_LENGTH = 8
 PASSWORD_MAX_LENGTH = 30
 
 
-class MemberAttributeAcquisitionStatus(StrValueLabel):
-    RECEIVED = ('RECEIVED', '습득')
-    REVOKED = ('REVOKED', '회수')
+class AcquisitionPKType(StrValueLabel):
+    START_NODE = ('START_NODE', 'START_NODE')
+    NODE_ACQUISITION_RULE = ('NODE_ACQUISITION_RULE', 'NODE_ACQUISITION_RULE')
