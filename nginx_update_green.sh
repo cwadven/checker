@@ -5,7 +5,7 @@ NEW_CONFIG="server {
     server_name localhost;
 
     location / {
-        proxy_pass http://web_green:8001;
+        proxy_pass http://checker_web_green:8001;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
@@ -25,7 +25,7 @@ echo "> Health Check Start!"
 
 for RETRY_COUNT in $(seq 1 100)
 do
-  RESPONSE=$(curl -s http://web_green:8001/)
+  RESPONSE=$(curl -s http://checker_web_green:8001/)
 
   if [ -n "$RESPONSE" ]
   then

@@ -2,8 +2,8 @@
 
 version: '3.8'
 services:
-  web_blue:
-    container_name: web_blue
+  checker_web_blue:
+    container_name: checker_web_blue
     build:
       context: .
       dockerfile: Dockerfile-app
@@ -11,18 +11,16 @@ services:
       sh -c "pip install --no-cache-dir -r requirements.txt &&
              python manage.py migrate && 
              python manage.py collectstatic --noinput &&
-             newrelic-admin run-program gunicorn config.wsgi:application --bind 0.0.0.0:8000"
+             gunicorn config.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
       - "8000:8000"
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings.production
-      - NEW_RELIC_APP_NAME=${NEW_RELIC_APP_NAME}
-      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
 
   cron_blue:
-    container_name: cron_blue
+    container_name: checker_cron_blue
     build:
       context: .
       dockerfile: Dockerfile-app
@@ -30,7 +28,7 @@ services:
       - .:/app
       - cron_log:/tmp
     depends_on:
-      - web_blue
+      - checker_web_blue
     command: >
       sh -c "pip install --no-cache-dir -r requirements.txt &&
                    dos2unix command.cron &&
@@ -42,7 +40,7 @@ services:
       - DJANGO_SETTINGS_MODULE=config.settings.production
 
   celery_blue:
-    container_name: celery_blue
+    container_name: checker_celery_blue
     build:
       context: .
       dockerfile: Dockerfile-app
@@ -50,7 +48,7 @@ services:
       sh -c "pip install --no-cache-dir -r requirements.txt &&
              celery -A config worker -l info"
     depends_on:
-      - web_blue
+      - checker_web_blue
     volumes:
       - .:/app
     environment:
@@ -63,4 +61,4 @@ volumes:
 networks:
   default:
     external:
-      name: common_network
+      name: checker_common_network

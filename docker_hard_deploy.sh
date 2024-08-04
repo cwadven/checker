@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Check Docker Network
-NETWORK_NAME="common_network"
+NETWORK_NAME="checker_common_network"
 
 # Search from Docker Network List
 network_exists=$(docker network ls | grep -w $NETWORK_NAME)
@@ -13,7 +13,7 @@ if [ -z "$network_exists" ]; then
 fi
 
 DATA_COMPOSE_FILE=docker-compose-data.yml
-data_services="database pgadmin cache"
+data_services="checker_database checker_pgadmin checker_cache"
 
 # Check if all data services are running
 data_all_services_up=true
@@ -35,7 +35,7 @@ if [ "$data_all_services_up" = "false" ]; then
 fi
 
 WEB_COMPOSE_FILE=docker-compose-web.yml
-web_services="web_server celery_monitor"
+web_services="checker_web_server checker_celery_monitor"
 
 # Check if all web services are running
 web_all_services_up=true
@@ -60,8 +60,8 @@ fi
 BLUE_APP_COMPOSE_FILE=docker-compose-app-blue.yml
 GREEN_APP_COMPOSE_FILE=docker-compose-app-green.yml
 
-blue_app_services="web_blue cron_blue celery_blue"
-green_app_services="web_green cron_green celery_green"
+blue_app_services="checker_web_blue checker_cron_blue checker_celery_blue"
+green_app_services="checker_web_green checker_cron_green checker_celery_green"
 
 app_blue_services_up=true
 app_green_services_up=true
@@ -88,19 +88,19 @@ done
 if [ "$app_blue_services_up" = "false" ] && [ "$app_green_services_up" = "false" ]; then
     echo "Both blue and green servers are not running. Starting build blue and run..."
     docker-compose -f $BLUE_APP_COMPOSE_FILE up -d --build
-    docker exec web_server /bin/sh -c '/etc/nginx/conf.d/nginx_update_blue.sh'
+    docker exec checker_web_server /bin/sh -c '/etc/nginx/conf.d/nginx_update_blue.sh'
     echo "Nginx setting to blue environment"
 elif [ "$app_blue_services_up" = "true" ]; then
     echo "Deploying green server."
     docker-compose -f $GREEN_APP_COMPOSE_FILE up -d --build
-    docker exec web_server /bin/sh -c '/etc/nginx/conf.d/nginx_update_green.sh'
+    docker exec checker_web_server /bin/sh -c '/etc/nginx/conf.d/nginx_update_green.sh'
     echo "Nginx setting to green environment."
     docker-compose -f $BLUE_APP_COMPOSE_FILE down
     echo "Remove blue environment."
 elif [ "$app_green_services_up" = "true" ]; then
     echo "Deploying blue server."
     docker-compose -f $BLUE_APP_COMPOSE_FILE up -d --build
-    docker exec web_server /bin/sh -c '/etc/nginx/conf.d/nginx_update_blue.sh'
+    docker exec checker_web_server /bin/sh -c '/etc/nginx/conf.d/nginx_update_blue.sh'
     echo "Nginx setting to blue environment."
     docker-compose -f $GREEN_APP_COMPOSE_FILE down
     echo "Remove green environment."

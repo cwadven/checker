@@ -3,7 +3,7 @@
 version: '3.8'
 services:
   nginx:
-    container_name: web_server
+    container_name: checker_web_server
     build:
       context: .
       dockerfile: Dockerfile-nginx
@@ -13,7 +13,7 @@ services:
       - "80:80"
 
   flower:
-    container_name: celery_monitor
+    container_name: checker_celery_monitor
     build:
       context: .
       dockerfile: Dockerfile-app
@@ -29,4 +29,4 @@ services:
 networks:
   default:
     external:
-      name: common_network
+      name: checker_common_network

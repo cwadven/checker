@@ -25,6 +25,7 @@ def generate_env(c):
         'KAKAO_PAY_SECRET_KEY': _get_or_set_environment('KAKAO_PAY_SECRET_KEY'),
         'NAVER_API_KEY': _get_or_set_environment('NAVER_API_KEY'),
         'NAVER_SECRET_KEY': _get_or_set_environment('NAVER_SECRET_KEY'),
+        'NAVER_REDIRECT_URL': _get_or_set_environment('NAVER_REDIRECT_URL'),
         'GOOGLE_CLIENT_ID': _get_or_set_environment('GOOGLE_CLIENT_ID'),
         'GOOGLE_SECRET_KEY': _get_or_set_environment('GOOGLE_SECRET_KEY'),
         'GOOGLE_REDIRECT_URL': _get_or_set_environment('GOOGLE_REDIRECT_URL'),
@@ -53,9 +54,7 @@ def generate_env(c):
             'HOST': _get_or_set_environment('DB_HOST'),
             'PORT': _get_or_set_environment('DB_PORT'),
             'TEST': {
-                'NAME': _get_or_set_environment('DB_TEST_NAME'),
-                'CHARSET': 'utf8',
-                'COLLATION': 'utf8_general_ci',
+                'NAME': _get_or_set_environment('DB_TEST_NAME')
             },
         },
         'EMAIL_HOST_USER': _get_or_set_environment('EMAIL_HOST_USER'),
@@ -67,7 +66,7 @@ def generate_env(c):
         'CRONTAB_PREFIX_COMMAND': _get_or_set_environment('CRONTAB_PREFIX_COMMAND'),
         'OPENAI_API_KEY': _get_or_set_environment('OPENAI_API_KEY'),
         'SENTRY_DSN': _get_or_set_environment('SENTRY_DSN'),
-        'SENTRY_ENV': _get_or_set_environment('SENTRY_ENV').lower() if _get_or_set_environment('SENTRY_DSN') else None,
+        'SENTRY_ENV': _get_or_set_environment('SENTRY_ENV').lower() if os.environ.get('SENTRY_DSN') else None,
     }
 
     with open(env_file_path, 'w', encoding='utf-8') as f:
