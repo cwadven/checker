@@ -142,8 +142,8 @@ class MemberNodeAcquisition(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = '회원 노드 획득'
-        verbose_name_plural = '회원 노드 획득'
+        verbose_name = '회원 Node 획득'
+        verbose_name_plural = '회원 Node 획득'
 
     def __str__(self):
         return f'member: {self.member_map_subscription.member_id} / node_id: {self.node_id}'
@@ -161,8 +161,8 @@ class MemberArrowAcquisition(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = '회원 화살 획득'
-        verbose_name_plural = '회원 화살 획득'
+        verbose_name = '회원 Arrow 획득'
+        verbose_name_plural = '회원 Arrow 획득'
 
     def __str__(self):
         return f'member: {self.member_map_subscription.member_id} / arrow_id: {self.arrow_id}'
