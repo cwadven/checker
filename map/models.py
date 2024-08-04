@@ -29,6 +29,8 @@ class Map(models.Model):
                 opclasses=['gin_trgm_ops'],
             ),
         ]
+        verbose_name = '맵'
+        verbose_name_plural = '맵'
 
     def __str__(self):
         return f'id: {self.id} / title: {self.title}'

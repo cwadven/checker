@@ -41,6 +41,8 @@ class Node(models.Model):
                 opclasses=['gin_trgm_ops'],
             ),
         ]
+        verbose_name = 'Node'
+        verbose_name_plural = 'Node'
 
     def __str__(self):
         return f'id: {self.id} / simple_word: {self.simple_word}'
@@ -73,6 +75,10 @@ class Arrow(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        verbose_name = 'Arrow'
+        verbose_name_plural = 'Arrow'
+
 
 class NodeAcquisitionRule(models.Model):
     node = models.ForeignKey('Node', on_delete=models.DO_NOTHING)
@@ -94,6 +100,10 @@ class NodeAcquisitionRule(models.Model):
     def __str__(self):
         return f'id: {self.id} / node_id: {self.node_id} / title: {self.title}'
 
+    class Meta:
+        verbose_name = 'Node 획득을 위한 조건'
+        verbose_name_plural = 'Node 획득을 위한 조건'
+
 
 class ArrowAcquisitionRule(models.Model):
     arrow = models.ForeignKey('Arrow', on_delete=models.DO_NOTHING)
@@ -104,6 +114,10 @@ class ArrowAcquisitionRule(models.Model):
     def __str__(self):
         return f'id: {self.id} / arrow_id: {self.arrow_id}'
 
+    class Meta:
+        verbose_name = 'Arrow 획득을 위한 조건'
+        verbose_name_plural = 'Arrow 획득을 위한 조건'
+
 
 class ArrowAcquisitionQuestionRule(models.Model):
     arrow_acquisition_rule = models.ForeignKey('ArrowAcquisitionRule', on_delete=models.DO_NOTHING)
@@ -113,6 +127,10 @@ class ArrowAcquisitionQuestionRule(models.Model):
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Arrow 획득을 위한 조건 중 문제형: 문제'
+        verbose_name_plural = 'Arrow 획득을 위한 조건 중 문제형: 문제'
 
     def __str__(self):
         return f'id: {self.id} / arrow_acquisition_rule_id: {self.arrow_acquisition_rule_id}'
@@ -128,6 +146,10 @@ class ArrowAcquisitionQuestionAnswer(models.Model):
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Arrow 획득을 위한 조건 중 문제형: 정답'
+        verbose_name_plural = 'Arrow 획득을 위한 조건 중 문제형: 정답'
 
     def __str__(self):
         return f'id: {self.id} / arrow_acquisition_question_rule_id: {self.arrow_acquisition_question_rule_id}'
@@ -155,6 +177,10 @@ class ArrowAcquisitionQuestionMemberResponse(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        verbose_name = 'Arrow 획득을 위한 조건 중 문제형: 사용자 답지'
+        verbose_name_plural = 'Arrow 획득을 위한 조건 중 문제형: 사용자 답지'
+
     def __str__(self):
         return f'id: {self.id} / arrow_acquisition_question_rule_id: {self.arrow_acquisition_question_rule_id}'
 
@@ -173,6 +199,10 @@ class ArrowAcquisitionQuestionMemberResponseReply(models.Model):
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Arrow 획득을 위한 조건 중 문제형: 채점자 답변'
+        verbose_name_plural = 'Arrow 획득을 위한 조건 중 문제형: 채점자 답변'
 
     def __str__(self):
         return f'id: {self.id} / arrow_acquisition_question_member_response_id: {self.arrow_acquisition_question_member_response_id}'
