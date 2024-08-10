@@ -49,6 +49,7 @@ class Node(models.Model):
 
 
 class Arrow(models.Model):
+    map = models.ForeignKey('map.Map', on_delete=models.DO_NOTHING)
     created_by = models.ForeignKey('member.Member', on_delete=models.DO_NOTHING)
     simple_word = models.CharField(max_length=256)
     title = models.CharField(max_length=256)
